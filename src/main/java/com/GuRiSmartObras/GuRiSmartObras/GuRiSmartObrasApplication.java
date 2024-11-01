@@ -9,5 +9,4 @@ public class GuRiSmartObrasApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GuRiSmartObrasApplication.class, args);
 	}
-
 }

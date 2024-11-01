@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 
 @Entity(name = "projetomateriais")
 public class GuRi_ProjetoMateriais {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int projetoId;
-    @ManyToMany
-    @JoinColumn(name = "materialId", nullable = false, insertable = false, updatable = false)
+    @Embedded
     private GuRi_Materiais material;
     private int quantidade;
 
