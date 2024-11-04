@@ -16,10 +16,10 @@ public class GuRi_Tarefas {
     private LocalDate dataInicio;
     private LocalDate dataFim;
     @ManyToOne
-    @JoinColumn(name = "projetoId", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "projetoid", nullable = false, insertable = false, updatable = false)
     private GuRi_Projetos projeto;
     @ManyToOne
-    @JoinColumn(name = "funcionarioId", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "funcionarioid", nullable = false, insertable = false, updatable = false)
     private GuRi_Funcionarios funcionario;
 
     public int getTarefaId() {

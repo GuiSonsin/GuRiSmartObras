@@ -4,19 +4,38 @@ import jakarta.persistence.*;
 
 @Entity(name = "projetomateriais")
 public class GuRi_ProjetoMateriais {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int projetoId;
-    @Embedded
+    @EmbeddedId
+    private GuRi_ProjetoMateriaisID id;
+
+    @ManyToOne
+    @MapsId("materialId")
+    @JoinColumn(name = "materialId")
     private GuRi_Materiais material;
     private int quantidade;
 
-    public int getProjetoId() {
-        return projetoId;
+    @ManyToOne
+    @MapsId("projetoId")
+    @JoinColumn(name = "projetoId")
+   private GuRi_Projetos projeto;
+
+    public GuRi_ProjetoMateriaisID getId() {
+        return id;
     }
 
-    public void setProjetoId(int projetoId) {
-        this.projetoId = projetoId;
+    public void setId(GuRi_ProjetoMateriaisID id) {
+        this.id = id;
+    }
+
+    public void setMaterial(GuRi_Materiais material) {
+        this.material = material;
+    }
+
+    public GuRi_Projetos getProjeto() {
+        return projeto;
+    }
+
+    public void setProjeto(GuRi_Projetos projeto) {
+        this.projeto = projeto;
     }
 
     public GuRi_Materiais getMaterial() {
