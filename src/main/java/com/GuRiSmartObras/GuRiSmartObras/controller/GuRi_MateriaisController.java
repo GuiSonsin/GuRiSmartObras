@@ -3,6 +3,7 @@ package com.GuRiSmartObras.GuRiSmartObras.controller;
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Materiais;
 import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_MateriaisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,46 +25,48 @@ public class GuRi_MateriaisController {
     }
 
     @PostMapping
-    public ResponseEntity<GuRi_Materiais> cadastrarMaterial(@RequestBody GuRi_Materiais material) throws Exception {
+    public ResponseEntity<String> cadastrarMaterial(@RequestBody GuRi_Materiais material)  {
         if (material.getPreco() <= 0){
-            throw new Exception("Preco precisa ser maior que 0");
-        } else if (material.getQuantidade() <= 0) {
-            throw new Exception("Quantidade precisa ser maior que 0");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Preco precisa ser maior que 0");
         }
-        GuRi_Materiais materialCriado = materiaisService.cadastrarMaterial(material);
-        return ResponseEntity.ok(materialCriado);
+        if (material.getQuantidade() <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Quantidade precisa ser maior que 0");
+        }
+
+        materiaisService.cadastrarMaterial(material);
+        return ResponseEntity.ok("Material cadastrado com sucesso!");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GuRi_Materiais> atualizarMaterial(@PathVariable int id, @RequestBody GuRi_Materiais materialAtualizado) throws Exception {
+    public ResponseEntity<String> atualizarMaterial(@PathVariable int id, @RequestBody GuRi_Materiais materialAtualizado) {
         GuRi_Materiais materialExiste = materiaisService.buscarMaterialPorID(id);
 
         if (materialExiste == null){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Material nao encontrado com materialId " + id);
         }
 
         if (materialAtualizado.getPreco() <= 0){
-            throw new Exception("Preco precisa ser maior que 0");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Preco precisa ser maior que 0");
         } else if (materialAtualizado.getQuantidade() <= 0) {
-            throw new Exception("Quantidade precisa ser maior que 0");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Quantidade precisa ser maior que 0");
         }
         materialExiste.setNome(materialAtualizado.getNome());
         materialExiste.setPreco(materialAtualizado.getPreco());
         materialExiste.setQuantidade(materialAtualizado.getQuantidade());
 
-        GuRi_Materiais materialAtt = materiaisService.atualizarDadosMaterial(materialExiste);
-        return ResponseEntity.ok(materialAtt);
+        materiaisService.atualizarDadosMaterial(materialExiste);
+        return ResponseEntity.ok("Material atualizado com sucesso!");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<GuRi_Materiais> removeMaterial(@PathVariable int id){
+    public ResponseEntity<String> removeMaterial(@PathVariable int id){
         GuRi_Materiais materialExiste = materiaisService.buscarMaterialPorID(id);
 
         if (materialExiste == null){
-            ResponseEntity.notFound().build();
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Material nao encontrado com materialId " + id);
         }
 
         materiaisService.removeMaterial(materialExiste.getMaterialId());
-        return ResponseEntity.ok(materialExiste);
+        return ResponseEntity.ok("Material removido com sucesso!");
     }
 }

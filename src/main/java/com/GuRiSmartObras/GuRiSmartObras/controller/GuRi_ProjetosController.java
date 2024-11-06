@@ -3,6 +3,7 @@ package com.GuRiSmartObras.GuRiSmartObras.controller;
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Projetos;
 import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_ProjetosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,17 +26,17 @@ public class GuRi_ProjetosController {
     }
 
     @PostMapping
-    public ResponseEntity<GuRi_Projetos> cadastrarProjetos(@RequestBody GuRi_Projetos projeto){
-        GuRi_Projetos projetoCriado = projetosService.cadastrarProjeto(projeto);
-        return  ResponseEntity.ok(projetoCriado);
+    public ResponseEntity<String> cadastrarProjetos(@RequestBody GuRi_Projetos projeto){
+        projetosService.cadastrarProjeto(projeto);
+        return  ResponseEntity.ok("Projeto cadastrado com sucesso!");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GuRi_Projetos> atualizarProjeto(@PathVariable int id, @RequestBody GuRi_Projetos projetoAtualizado){
+    public ResponseEntity<String> atualizarProjeto(@PathVariable int id, @RequestBody GuRi_Projetos projetoAtualizado){
         GuRi_Projetos projetoExiste = projetosService.buscarProjetoPorID(id);
 
         if (projetoExiste == null){
-            ResponseEntity.notFound().build();
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Projeto nao encontrado com projetoId " + id);
         }
 
         projetoExiste.setNome(projetoAtualizado.getNome());
@@ -48,21 +49,22 @@ public class GuRi_ProjetosController {
             projetoExiste.setDataInicio(projetoAtualizado.getDataInicio());
         }
 
-        GuRi_Projetos projetoAtt = projetosService.atualizarDadosProjeto(projetoExiste);
-        return ResponseEntity.ok(projetoAtt);
+        projetosService.atualizarDadosProjeto(projetoExiste);
+
+        return ResponseEntity.ok("Projeto atualizado com sucesso!");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<GuRi_Projetos> removeProjeto(@PathVariable int id){
+    public ResponseEntity<String> removeProjeto(@PathVariable int id){
         GuRi_Projetos projetoExiste = projetosService.buscarProjetoPorID(id);
 
         if(projetoExiste == null){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Projeto nao encontrado com projetoId " + id);
         }
 
         projetoExiste.setDataFim(LocalDate.now());
 
         projetosService.removeProjeto(projetoExiste.getProjetoId());
-        return ResponseEntity.ok(projetoExiste);
+        return ResponseEntity.ok("Projeto removido com sucesso");
     }
 }
