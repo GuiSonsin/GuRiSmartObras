@@ -2,6 +2,7 @@ package com.GuRiSmartObras.GuRiSmartObras.controller;
 
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Projetos;
 import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_ProjetosService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class GuRi_ProjetosController {
     GuRi_ProjetosService projetosService;
 
+    @Autowired
     public GuRi_ProjetosController(GuRi_ProjetosService projetosService) {
         this.projetosService = projetosService;
     }

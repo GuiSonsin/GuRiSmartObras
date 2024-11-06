@@ -7,6 +7,14 @@ public class GuRi_ProjetoMateriaisID {
     private int projetoId;
     private int materialId;
 
+    public GuRi_ProjetoMateriaisID(int projetoId, int materialId) {
+        this.projetoId = projetoId;
+        this.materialId = materialId;
+    }
+
+    public GuRi_ProjetoMateriaisID() {
+    }
+
     public int getProjetoId() {
         return projetoId;
     }
@@ -22,4 +30,5 @@ public class GuRi_ProjetoMateriaisID {
     public void setMaterialId(int materialId) {
         this.materialId = materialId;
     }
+
 }

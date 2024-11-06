@@ -2,6 +2,7 @@ package com.GuRiSmartObras.GuRiSmartObras.controller;
 
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Tarefas;
 import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_TarefasService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class GuRi_TarefasController {
     GuRi_TarefasService tarefasService;
 
+    @Autowired
     public GuRi_TarefasController(GuRi_TarefasService tarefasService) {
         this.tarefasService = tarefasService;
     }

@@ -18,6 +18,14 @@ public class GuRi_ProjetoMateriais {
     @JoinColumn(name = "projeto_id", nullable = false)
     private GuRi_Projetos projeto;
 
+    public GuRi_ProjetoMateriais() {
+    }
+
+    public GuRi_ProjetoMateriais(GuRi_ProjetoMateriaisID id, int quantidade) {
+        this.id = id;
+        this.quantidade = quantidade;
+    }
+
     public GuRi_ProjetoMateriaisID getId() {
         return id;
     }

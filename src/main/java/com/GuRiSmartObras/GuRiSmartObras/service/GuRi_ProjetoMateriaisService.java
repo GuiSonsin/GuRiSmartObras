@@ -25,15 +25,17 @@ public class GuRi_ProjetoMateriaisService {
         return projetoMateriaisRepository.save(projetoMaterial);
     }
 
-    public GuRi_ProjetoMateriais buscarProjetoMaterialPorID(int id){
-        return projetoMateriaisRepository.findById(id).orElse(null);
+    public GuRi_ProjetoMateriais buscarProjetoMaterialPorID(int projetoId, int materialId){
+        return projetoMateriaisRepository.findById_ProjetoIdAndId_MaterialId(projetoId, materialId).orElse(null);
     }
 
     public GuRi_ProjetoMateriais atualizarDadosProjetoMaterial(GuRi_ProjetoMateriais projetoMaterial){
         return projetoMateriaisRepository.save(projetoMaterial);
     }
 
-    public void removeProjetoMaterial(int projetoMaterialId){
-        projetoMateriaisRepository.deleteById(projetoMaterialId);
+    public void removeProjetoMaterial(int projetoId, int materialId){
+        GuRi_ProjetoMateriais projetoMaterial = projetoMateriaisRepository.findById_ProjetoIdAndId_MaterialId(projetoId, materialId)
+                .orElseThrow(() -> new RuntimeException("ProjetoMaterial não encontrado"));
+        projetoMateriaisRepository.delete(projetoMaterial);
     }
 }
