@@ -12,14 +12,15 @@ public class GuRi_Tarefas {
     private int tarefaId;
     private String nome;
     private String descricao;
-    @CreationTimestamp
-    private LocalDate dataInicio;
-    private LocalDate dataFim;
+    private LocalDate datainicio;
+    private LocalDate datafim;
+
     @ManyToOne
-    @JoinColumn(name = "projetoid", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "projeto_id")
     private GuRi_Projetos projeto;
+
     @ManyToOne
-    @JoinColumn(name = "funcionarioid", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "funcionario_id")
     private GuRi_Funcionarios funcionario;
 
     public int getTarefaId() {
@@ -47,19 +48,19 @@ public class GuRi_Tarefas {
     }
 
     public LocalDate getDataInicio() {
-        return dataInicio;
+        return datainicio;
     }
 
     public void setDataInicio(LocalDate dataInicio) {
-        this.dataInicio = dataInicio;
+        this.datainicio = dataInicio;
     }
 
     public LocalDate getDataFim() {
-        return dataFim;
+        return datafim;
     }
 
     public void setDataFim(LocalDate dataFim) {
-        this.dataFim = dataFim;
+        this.datafim = dataFim;
     }
 
     public GuRi_Projetos getProjeto() {

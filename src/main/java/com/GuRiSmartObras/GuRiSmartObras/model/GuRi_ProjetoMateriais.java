@@ -9,14 +9,14 @@ public class GuRi_ProjetoMateriais {
 
     @ManyToOne
     @MapsId("materialId")
-    @JoinColumn(name = "materialId")
+    @JoinColumn(name = "material_id", nullable = false)
     private GuRi_Materiais material;
     private int quantidade;
 
     @ManyToOne
     @MapsId("projetoId")
-    @JoinColumn(name = "projetoId")
-   private GuRi_Projetos projeto;
+    @JoinColumn(name = "projeto_id", nullable = false)
+    private GuRi_Projetos projeto;
 
     public GuRi_ProjetoMateriaisID getId() {
         return id;

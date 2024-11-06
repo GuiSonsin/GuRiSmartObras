@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("/clientes")
 public class GuRi_ClientesController {
     GuRi_ClientesService clientesService;
 
@@ -22,7 +22,7 @@ public class GuRi_ClientesController {
     }
 
     @PostMapping
-    public ResponseEntity<GuRi_Clientes> criarCurso(@RequestBody GuRi_Clientes cliente){
+    public ResponseEntity<GuRi_Clientes> criarCliente(@RequestBody GuRi_Clientes cliente){
         GuRi_Clientes clienteCriado = clientesService.cadastrarCliente(cliente);
         return ResponseEntity.ok(clienteCriado);
     }

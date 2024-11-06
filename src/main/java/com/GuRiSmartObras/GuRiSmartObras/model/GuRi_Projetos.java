@@ -12,15 +12,16 @@ public class GuRi_Projetos {
     private int projetoId;
     private String nome;
     private String descricao;
-    @CreationTimestamp
-    private LocalDate dataInicio;
-    private LocalDate dataFim;
-    @OneToOne
-    @JoinColumn(name = "clienteId", nullable = false, insertable = false, updatable = false)
+    private LocalDate datainicio;
+    private LocalDate datafim;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id", nullable = false)
     private GuRi_Clientes cliente;
     private String status;
-    @OneToOne
-    @JoinColumn(name = "funcionarioId", nullable = false, insertable = false, updatable = false)
+
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id", nullable = false)
     private GuRi_Funcionarios funcionario;
 
     public int getProjetoId() {
@@ -48,19 +49,19 @@ public class GuRi_Projetos {
     }
 
     public LocalDate getDataInicio() {
-        return dataInicio;
+        return datainicio;
     }
 
     public void setDataInicio(LocalDate dataInicio) {
-        this.dataInicio = dataInicio;
+        this.datainicio = dataInicio;
     }
 
     public LocalDate getDataFim() {
-        return dataFim;
+        return datafim;
     }
 
     public void setDataFim(LocalDate dataFim) {
-        this.dataFim = dataFim;
+        this.datafim = dataFim;
     }
 
     public GuRi_Clientes getCliente() {
