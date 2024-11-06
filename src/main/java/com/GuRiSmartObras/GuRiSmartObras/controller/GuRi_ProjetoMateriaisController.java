@@ -1,6 +1,6 @@
 package com.GuRiSmartObras.GuRiSmartObras.controller;
 
-import com.GuRiSmartObras.GuRiSmartObras.DTO.GuRi_ProjetoMateriaisDTO;
+import com.GuRiSmartObras.GuRiSmartObras.dto.GuRi_ProjetoMateriaisRequest;
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Materiais;
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_ProjetoMateriais;
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_ProjetoMateriaisID;
@@ -10,7 +10,6 @@ import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_ProjetoMateriaisService;
 import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_ProjetosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,7 @@ public class GuRi_ProjetoMateriaisController {
     }
 
     @PostMapping
-    public ResponseEntity<String> cadastrarProjetoMateriais(@RequestBody GuRi_ProjetoMateriaisDTO projetoMateriais) {
+    public ResponseEntity<String> cadastrarProjetoMateriais(@RequestBody GuRi_ProjetoMateriaisRequest projetoMateriais) {
         GuRi_Materiais material = materiaisService.buscarMaterialPorID(projetoMateriais.getMaterialId());
 
         if (material == null) {
@@ -67,7 +66,7 @@ public class GuRi_ProjetoMateriaisController {
 
     @PutMapping("/{projetoId}/{materialId}")
     public ResponseEntity<String> atualizarProjetoMateriais(@PathVariable int projetoId,
-                @PathVariable int materialId, @RequestBody GuRi_ProjetoMateriaisDTO projetoMaterialAtualizado) {
+                @PathVariable int materialId, @RequestBody GuRi_ProjetoMateriaisRequest projetoMaterialAtualizado) {
 
         GuRi_ProjetoMateriais projetoMaterialExiste = projetoMateriaisService.buscarProjetoMaterialPorID(projetoId, materialId);
 

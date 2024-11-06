@@ -1,5 +1,6 @@
 package com.GuRiSmartObras.GuRiSmartObras.controller;
 
+import com.GuRiSmartObras.GuRiSmartObras.dto.GuRi_ResponseMessage;
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Tarefas;
 import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_TarefasService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,11 @@ public class GuRi_TarefasController {
     }
 
     @PostMapping
-    public ResponseEntity<String> criarTarefa(@RequestBody GuRi_Tarefas tarefa){
+    public ResponseEntity<GuRi_ResponseMessage> criarTarefa(@RequestBody GuRi_Tarefas tarefa){
+
+
         tarefasService.cadastrarTarefa(tarefa);
-        return ResponseEntity.ok("Tarefa cadastrada com sucesso!");
+        return ResponseEntity.ok(new GuRi_ResponseMessage("Tarefa cadastrada com sucesso!"));
     }
 
     @PutMapping("/{id}")

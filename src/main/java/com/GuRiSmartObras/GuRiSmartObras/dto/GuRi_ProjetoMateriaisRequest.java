@@ -1,6 +1,6 @@
-package com.GuRiSmartObras.GuRiSmartObras.DTO;
+package com.GuRiSmartObras.GuRiSmartObras.dto;
 
-public class GuRi_ProjetoMateriaisDTO {
+public class GuRi_ProjetoMateriaisRequest {
     private int quantidade;
     private int materialId;
     private int projetoId;

@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 @Entity(name = "clientes")
 public class GuRi_Clientes {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int clienteId;
     private String nome;
     private String endereco;

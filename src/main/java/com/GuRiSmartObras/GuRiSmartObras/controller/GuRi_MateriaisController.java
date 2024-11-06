@@ -63,7 +63,7 @@ public class GuRi_MateriaisController {
         GuRi_Materiais materialExiste = materiaisService.buscarMaterialPorID(id);
 
         if (materialExiste == null){
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Material nao encontrado com materialId " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Material nao encontrado com materialId " + id);
         }
 
         materiaisService.removeMaterial(materialExiste.getMaterialId());

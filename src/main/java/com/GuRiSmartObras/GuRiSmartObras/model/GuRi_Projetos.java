@@ -24,6 +24,19 @@ public class GuRi_Projetos {
     @JoinColumn(name = "funcionario_id", nullable = false)
     private GuRi_Funcionarios funcionario;
 
+    public GuRi_Projetos(String nome, String descricao, LocalDate datainicio, LocalDate datafim, GuRi_Clientes cliente, String status, GuRi_Funcionarios funcionario) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.datainicio = datainicio;
+        this.datafim = datafim;
+        this.cliente = cliente;
+        this.status = status;
+        this.funcionario = funcionario;
+    }
+
+    public GuRi_Projetos() {
+    }
+
     public int getProjetoId() {
         return projetoId;
     }

@@ -1,6 +1,13 @@
 package com.GuRiSmartObras.GuRiSmartObras.controller;
 
+import com.GuRiSmartObras.GuRiSmartObras.dto.GuRi_ProjetoRequest;
+import com.GuRiSmartObras.GuRiSmartObras.dto.GuRi_ResponseMessage;
+import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Clientes;
+import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Funcionarios;
+import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Materiais;
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Projetos;
+import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_ClientesService;
+import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_FuncionariosService;
 import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_ProjetosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +23,12 @@ public class GuRi_ProjetosController {
     GuRi_ProjetosService projetosService;
 
     @Autowired
+    GuRi_ClientesService clientesService;
+
+    @Autowired
+    GuRi_FuncionariosService funcionariosService;
+
+    @Autowired
     public GuRi_ProjetosController(GuRi_ProjetosService projetosService) {
         this.projetosService = projetosService;
     }
@@ -26,9 +39,35 @@ public class GuRi_ProjetosController {
     }
 
     @PostMapping
-    public ResponseEntity<String> cadastrarProjetos(@RequestBody GuRi_Projetos projeto){
-        projetosService.cadastrarProjeto(projeto);
-        return  ResponseEntity.ok("Projeto cadastrado com sucesso!");
+    public ResponseEntity<GuRi_ResponseMessage> cadastrarProjetos(@RequestBody GuRi_ProjetoRequest projeto){
+        GuRi_Clientes cliente = clientesService.buscarClientePorID(projeto.getClienteId());
+
+        if (cliente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Cliente nao encontrado com clienteId " + projeto.getClienteId()));
+        }
+
+        GuRi_Funcionarios funcionario = funcionariosService.buscarFuncionarioPorID(projeto.getFuncionarioId());
+
+        if (funcionario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Funcionário nao encontrado com funcionarioId " + projeto.getFuncionarioId()));
+        }
+
+        if (projeto.getNome() == null || projeto.getDescricao() == null || projeto.getStatus() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GuRi_ResponseMessage("Informe todos os dados obrigatório para criar o projeto (Nome, Descrição, Status)"));
+        }
+
+        GuRi_Projetos projetoCriado = new GuRi_Projetos(
+                projeto.getNome(),
+                projeto.getDescricao(),
+                projeto.getDatainicio(),
+                projeto.getDatafim(),
+                cliente,
+                projeto.getStatus(),
+                funcionario
+        );
+
+        projetosService.cadastrarProjeto(projetoCriado);
+        return ResponseEntity.ok(new GuRi_ResponseMessage("Projeto cadastrado com sucesso!"));
     }
 
     @PutMapping("/{id}")
