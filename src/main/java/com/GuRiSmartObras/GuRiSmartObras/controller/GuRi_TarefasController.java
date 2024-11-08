@@ -1,7 +1,12 @@
 package com.GuRiSmartObras.GuRiSmartObras.controller;
 
 import com.GuRiSmartObras.GuRiSmartObras.dto.GuRi_ResponseMessage;
+import com.GuRiSmartObras.GuRiSmartObras.dto.GuRi_TarefaRequest;
+import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Funcionarios;
+import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Projetos;
 import com.GuRiSmartObras.GuRiSmartObras.model.GuRi_Tarefas;
+import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_FuncionariosService;
+import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_ProjetosService;
 import com.GuRiSmartObras.GuRiSmartObras.service.GuRi_TarefasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +22,12 @@ public class GuRi_TarefasController {
     GuRi_TarefasService tarefasService;
 
     @Autowired
+    GuRi_ProjetosService projetosService;
+
+    @Autowired
+    GuRi_FuncionariosService funcionariosService;
+
+    @Autowired
     public GuRi_TarefasController(GuRi_TarefasService tarefasService) {
         this.tarefasService = tarefasService;
     }
@@ -27,42 +38,77 @@ public class GuRi_TarefasController {
     }
 
     @PostMapping
-    public ResponseEntity<GuRi_ResponseMessage> criarTarefa(@RequestBody GuRi_Tarefas tarefa){
+    public ResponseEntity<GuRi_ResponseMessage> criarTarefa(@RequestBody GuRi_TarefaRequest tarefa){
+        if (tarefa.getNome() == null || tarefa.getDescricao() == null) {
+            return ResponseEntity.badRequest().body(new GuRi_ResponseMessage("Informe todos os dados obrigatório para criar a tarefa (Nome, Descrição)"));
+        }
 
+        GuRi_Projetos projeto = projetosService.buscarProjetoPorID(tarefa.getProjetoId());
 
-        tarefasService.cadastrarTarefa(tarefa);
+        if (projeto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Projeto com ID " + tarefa.getProjetoId() + " não foi encontrado!"));
+        }
+
+        GuRi_Funcionarios funcionario = funcionariosService.buscarFuncionarioPorID(tarefa.getFuncionarioId());
+
+        if (funcionario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Funcionário com ID " + tarefa.getFuncionarioId() + " não foi encontrado!"));
+        }
+
+        GuRi_Tarefas tarefaCriada = new GuRi_Tarefas(
+                tarefa.getNome(),
+                tarefa.getDescricao(),
+                tarefa.getDataInicio(),
+                tarefa.getDataFim(),
+                projeto,
+                funcionario
+        );
+
+        tarefasService.cadastrarTarefa(tarefaCriada);
         return ResponseEntity.ok(new GuRi_ResponseMessage("Tarefa cadastrada com sucesso!"));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarTarefa(@PathVariable int id, @RequestBody GuRi_Tarefas tarefaAtualizada){
+    public ResponseEntity<GuRi_ResponseMessage> atualizarTarefa(@PathVariable int id, @RequestBody GuRi_TarefaRequest tarefaAtualizada){
         GuRi_Tarefas tarefaExiste = tarefasService.buscarTarefaPorID(id);
 
         if (tarefaExiste == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarefa nao encontrado com tarefaId " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Tarefa nao encontrado com tarefaId " + id));
         }
 
-        tarefaExiste.setNome(tarefaAtualizada.getNome());
-        tarefaExiste.setDescricao(tarefaAtualizada.getDescricao());
-        tarefaExiste.setProjeto(tarefaAtualizada.getProjeto());
-        tarefaExiste.setFuncionario(tarefaAtualizada.getFuncionario());
-        tarefaExiste.setDataInicio(tarefaAtualizada.getDataInicio());
+        GuRi_Projetos projeto = projetosService.buscarProjetoPorID(tarefaAtualizada.getProjetoId());
+
+        if (projeto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Projeto com ID " + tarefaAtualizada.getProjetoId() + " não foi encontrado!"));
+        }
+
+        GuRi_Funcionarios funcionario = funcionariosService.buscarFuncionarioPorID(tarefaAtualizada.getFuncionarioId());
+
+        if (funcionario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Funcionário com ID " + tarefaAtualizada.getFuncionarioId() + " não foi encontrado!"));
+        }
+
+        tarefaExiste.setNome(tarefaAtualizada.getNome() == null ? tarefaExiste.getNome() : tarefaAtualizada.getNome());
+        tarefaExiste.setDescricao(tarefaAtualizada.getDescricao()  == null ? tarefaExiste.getDescricao() : tarefaAtualizada.getDescricao());
+        tarefaExiste.setProjeto(tarefaAtualizada.getProjetoId() == 0 ? tarefaExiste.getProjeto() : projeto);
+        tarefaExiste.setFuncionario(tarefaAtualizada.getFuncionarioId() == 0 ? tarefaExiste.getFuncionario() : funcionario);
+        tarefaExiste.setDataInicio(tarefaAtualizada.getDataInicio() == null ? tarefaExiste.getDataInicio() : tarefaAtualizada.getDataInicio());
 
         tarefasService.atualizarDadosTarefa(tarefaExiste);
-        return ResponseEntity.ok("Tarefa atualizada com sucesso!");
+        return ResponseEntity.ok(new GuRi_ResponseMessage("Tarefa atualizada com sucesso!"));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removeTarefa(@PathVariable int id){
+    public ResponseEntity<GuRi_ResponseMessage> removeTarefa(@PathVariable int id){
         GuRi_Tarefas tarefaExiste = tarefasService.buscarTarefaPorID(id);
 
         if (tarefaExiste == null){
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarefa nao encontrado com tarefaId " + id);
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Tarefa nao encontrado com tarefaId " + id));
         }
 
         tarefaExiste.setDataFim(LocalDate.now());
 
         tarefasService.removeTarefa(tarefaExiste.getTarefaId());
-        return ResponseEntity.ok("Tarefa removida com sucesso!");
+        return ResponseEntity.ok(new GuRi_ResponseMessage("Tarefa removida com sucesso!"));
     }
 }

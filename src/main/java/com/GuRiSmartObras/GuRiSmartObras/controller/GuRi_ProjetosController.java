@@ -71,18 +71,40 @@ public class GuRi_ProjetosController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> atualizarProjeto(@PathVariable int id, @RequestBody GuRi_Projetos projetoAtualizado){
+    public ResponseEntity<GuRi_ResponseMessage> atualizarProjeto(@PathVariable int id, @RequestBody GuRi_ProjetoRequest projeto){
         GuRi_Projetos projetoExiste = projetosService.buscarProjetoPorID(id);
 
         if (projetoExiste == null){
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Projeto nao encontrado com projetoId " + id);
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Projeto nao encontrado com projetoId " + id));
         }
 
-        projetoExiste.setNome(projetoAtualizado.getNome());
+        GuRi_Clientes cliente = clientesService.buscarClientePorID(projeto.getClienteId());
+
+        if (cliente == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Cliente nao encontrado com clienteId " + projeto.getClienteId()));
+        }
+
+        GuRi_Funcionarios funcionario = funcionariosService.buscarFuncionarioPorID(projeto.getFuncionarioId());
+
+        if (funcionario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Funcionário nao encontrado com funcionarioId " + projeto.getFuncionarioId()));
+        }
+
+        GuRi_Projetos projetoAtualizado = new GuRi_Projetos(
+                projeto.getNome(),
+                projeto.getDescricao(),
+                projeto.getDatainicio(),
+                projeto.getDatafim(),
+                cliente,
+                projeto.getStatus(),
+                funcionario
+        );
+
+        projetoExiste.setNome(projetoAtualizado.getNome() == null ? projetoExiste.getNome() : projetoAtualizado.getNome());
         projetoExiste.setCliente(projetoAtualizado.getCliente());
-        projetoExiste.setDescricao(projetoAtualizado.getDescricao());
+        projetoExiste.setDescricao(projetoAtualizado.getDescricao() == null ? projetoExiste.getDescricao() : projetoAtualizado.getDescricao());
         projetoExiste.setFuncionario(projetoAtualizado.getFuncionario());
-        projetoExiste.setStatus(projetoAtualizado.getStatus());
+        projetoExiste.setStatus(projetoAtualizado.getStatus() == null ? projetoExiste.getStatus() : projetoAtualizado.getStatus());
 
         if (projetoAtualizado.getDataInicio() != null){
             projetoExiste.setDataInicio(projetoAtualizado.getDataInicio());
@@ -90,20 +112,20 @@ public class GuRi_ProjetosController {
 
         projetosService.atualizarDadosProjeto(projetoExiste);
 
-        return ResponseEntity.ok("Projeto atualizado com sucesso!");
+        return ResponseEntity.ok(new GuRi_ResponseMessage("Projeto atualizado com sucesso!"));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removeProjeto(@PathVariable int id){
+    public ResponseEntity<GuRi_ResponseMessage> removeProjeto(@PathVariable int id){
         GuRi_Projetos projetoExiste = projetosService.buscarProjetoPorID(id);
 
         if(projetoExiste == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Projeto nao encontrado com projetoId " + id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Projeto nao encontrado com projetoId " + id));
         }
 
         projetoExiste.setDataFim(LocalDate.now());
 
         projetosService.removeProjeto(projetoExiste.getProjetoId());
-        return ResponseEntity.ok("Projeto removido com sucesso");
+        return ResponseEntity.ok(new GuRi_ResponseMessage("Projeto removido com sucesso"));
     }
 }

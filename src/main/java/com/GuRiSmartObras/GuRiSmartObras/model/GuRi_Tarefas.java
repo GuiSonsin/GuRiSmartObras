@@ -15,6 +15,18 @@ public class GuRi_Tarefas {
     private LocalDate datainicio;
     private LocalDate datafim;
 
+    public GuRi_Tarefas() {
+    }
+
+    public GuRi_Tarefas(String nome, String descricao, LocalDate datainicio, LocalDate datafim, GuRi_Projetos projeto, GuRi_Funcionarios funcionario) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.datainicio = datainicio;
+        this.datafim = datafim;
+        this.projeto = projeto;
+        this.funcionario = funcionario;
+    }
+
     @ManyToOne
     @JoinColumn(name = "projeto_id")
     private GuRi_Projetos projeto;
