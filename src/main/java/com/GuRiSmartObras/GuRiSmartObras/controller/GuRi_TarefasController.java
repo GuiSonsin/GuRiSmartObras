@@ -76,13 +76,13 @@ public class GuRi_TarefasController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Tarefa nao encontrado com tarefaId " + id));
         }
 
-        GuRi_Projetos projeto = projetosService.buscarProjetoPorID(tarefaAtualizada.getProjetoId());
+        GuRi_Projetos projeto = projetosService.buscarProjetoPorID(tarefaExiste.getProjeto().getProjetoId());
 
         if (projeto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Projeto com ID " + tarefaAtualizada.getProjetoId() + " não foi encontrado!"));
         }
 
-        GuRi_Funcionarios funcionario = funcionariosService.buscarFuncionarioPorID(tarefaAtualizada.getFuncionarioId());
+        GuRi_Funcionarios funcionario = funcionariosService.buscarFuncionarioPorID(tarefaExiste.getFuncionario().getFuncionarioId());
 
         if (funcionario == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GuRi_ResponseMessage("Funcionário com ID " + tarefaAtualizada.getFuncionarioId() + " não foi encontrado!"));
